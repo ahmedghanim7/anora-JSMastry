@@ -1,54 +1,76 @@
-import { Tabs } from "expo-router";
-import React from "react";
+import { StatusBar } from "expo-status-bar";
+import { Redirect, Tabs } from "expo-router";
 
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { Image, ImageSourcePropType, Text, View } from "react-native";
+import { icons } from "../../constants";
+import BottomTabIcon from "@/components/navigation/BottomTabIcon";
 
-interface TabIconProps {
-  icon?: ImageSourcePropType;
-  color: string;
-  name: string;
-  focused: boolean;
-}
+const TabLayout = () => {
+  // const { loading, isLogged } = useGlobalContext();
 
-const TabIcon = ({ icon, color, name, focused }: TabIconProps) => {
+  // if (!loading && !isLogged) return <Redirect href="/sign-in" />;
+
   return (
-    <View>
-      <Image
-        source={icon}
-        resizeMode="contain"
-        tintColor={color}
-        width={6}
-        height={6}
-      />
-      <Text style={{ color: color }}>{name}</Text>
-    </View>
+    <>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: "#FFA001",
+          tabBarInactiveTintColor: "#CDCDE0",
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            backgroundColor: "#161622",
+            borderTopWidth: 1,
+            borderTopColor: "#232533",
+            height: 84,
+          },
+        }}
+      >
+        {tabs.map((item) => (
+          <Tabs.Screen
+            key={item.name}
+            name={item.name}
+            options={{
+              title: item.title,
+              headerShown: false,
+              tabBarIcon: ({ color, focused }) => (
+                <BottomTabIcon
+                  icon={item.icon}
+                  color={color}
+                  name={item.name}
+                  focused={focused}
+                />
+              ),
+            }}
+          />
+        ))}
+      </Tabs>
+
+      {/* <Loader isLoading={loading} /> */}
+      <StatusBar backgroundColor="#161622" style="light" />
+    </>
   );
 };
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default TabLayout;
 
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: false,
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: "Explore",
-        }}
-      />
-    </Tabs>
-  );
-}
+const tabs = [
+  {
+    title: "Home",
+    name: "home",
+    icon: icons.home,
+  },
+  {
+    title: "Create",
+    name: "create",
+    icon: icons.plus,
+  },
+  {
+    title: "Bookmark",
+    name: "bookmark",
+    icon: icons.bookmark,
+  },
+  {
+    title: "Profile",
+    name: "profile",
+    icon: icons.profile,
+  },
+];
