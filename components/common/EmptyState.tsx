@@ -1,24 +1,34 @@
 import { router } from "expo-router";
 import { View, Image, StyleSheet } from "react-native";
-
-import { images } from "../../constants";
-import { spacing } from "@/theme";
+import { SpacingTypes, spacing } from "@/theme";
 import { useCallback } from "react";
 import { Button, Typography, Loader } from ".";
+import { images } from "@/assets";
 
 interface EmptyStateProps {
   title: string;
   subtitle?: string;
   isLoading?: boolean;
+  marginHorizontal?: SpacingTypes;
 }
 
-const EmptyState = ({ title, subtitle, isLoading }: EmptyStateProps) => {
+const EmptyState = ({
+  title,
+  subtitle,
+  isLoading,
+  marginHorizontal,
+}: EmptyStateProps) => {
   const handleNavigate = useCallback(() => {
     router.push("/home");
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { marginHorizontal: spacing[marginHorizontal || "xLarge"] },
+      ]}
+    >
       {isLoading ? (
         <Loader isLoading={isLoading} containerStyles={styles.loader} />
       ) : (
@@ -31,7 +41,7 @@ const EmptyState = ({ title, subtitle, isLoading }: EmptyStateProps) => {
           <Typography content={title} variant="smallRegular" />
           {subtitle && (
             <Typography
-              content={subtitle}
+              content={subtitle || ""}
               variant="largeBold"
               containerStyles={{ marginTop: spacing.small }}
             />
@@ -54,7 +64,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: spacing.tiny,
+    minHeight: 300,
   },
   loader: {
     height: 100,

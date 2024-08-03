@@ -1,46 +1,45 @@
-import { useState } from "react";
-import { router, usePathname } from "expo-router";
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  TextInput,
-  StyleSheet,
-} from "react-native";
-
-import { icons } from "../../constants";
+import { router, useNavigation, usePathname } from "expo-router";
+import { View, TextInput, StyleSheet } from "react-native";
 import { colors, spacing } from "@/theme";
-import Toast from "react-native-toast-message";
+import { icons } from "@/assets";
+import { showToastError } from "@/utils";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { searchPosts, setSearchedText } from "@/store/features/posts";
+import IconButton from "./IconButton";
+import { useEffect } from "react";
 
-const SearchInput = ({ initialQuery }: { initialQuery?: string }) => {
-  const pathname = usePathname();
-  const [query, setQuery] = useState(initialQuery || "");
+const SearchInput = () => {
+  const dispatch = useAppDispatch();
+  const { searchedText } = useAppSelector((state) => state.posts.searchedPosts);
+  const pathName = usePathname();
+
+  const onSearchTextChanged = (text: string) => {
+    dispatch(setSearchedText(text));
+  };
 
   const searchPressHandler = () => {
-    if (query === "")
-      return Toast.show({
-        type: "error",
-        text1: "Please input something to search results across database",
-      });
-    if (pathname.startsWith("/search")) router.setParams({ query });
-    else router.push(`/search/${query}`);
+    if (searchedText === "")
+      return showToastError(
+        "Please input something to search results across database"
+      );
+    dispatch(searchPosts());
+    if (pathName !== "/search") router.push("/search");
   };
+
   return (
     <View style={styles.container}>
       <TextInput
-        style={{ marginTop: -1, flex: 1, color: colors.white }}
-        value={query}
+        style={styles.searchInput}
+        value={searchedText}
         placeholder="Search a video topic"
         placeholderTextColor="#CDCDE0"
-        onChangeText={(e) => setQuery(e)}
+        onChangeText={onSearchTextChanged}
       />
-      <TouchableOpacity onPress={searchPressHandler}>
-        <Image
-          source={icons.search}
-          style={{ width: spacing.large, height: spacing.large }}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
+      <IconButton
+        icon={icons.search}
+        iconStyle={styles.searchIcon}
+        onPress={searchPressHandler}
+      />
     </View>
   );
 };
@@ -60,5 +59,16 @@ const styles = StyleSheet.create({
     borderRadius: spacing.small,
     borderWidth: 2,
     borderColor: "#232533",
+  },
+  searchIcon: {
+    width: spacing.large,
+    height: spacing.large,
+    resizeMode: "contain",
+  },
+  searchInput: {
+    flex: 1,
+    color: colors.white,
+    height: "80%",
+    paddingLeft: spacing.smaller,
   },
 });

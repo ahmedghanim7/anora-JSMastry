@@ -1,40 +1,31 @@
-import { Image, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
-import { spacing } from "@/theme";
-import { useAppSelector } from "@/store";
 import { SearchInput, Typography } from "../common";
-import LatestVideos from "./LatestVideos";
-import { images } from "@/assets";
+import { spacing } from "@/theme";
 
-const HomeHeader = () => {
-  const { username } = useAppSelector((state) => state.user);
-
+const SearchHeader = ({ searchedText }: { searchedText: string }) => {
   return (
     <View style={{ paddingVertical: 10, marginBottom: 20 }}>
       <View style={styles.container}>
         <View style={styles.topContainer}>
           <View style={{ alignItems: "flex-start" }}>
-            <Typography content={"Welcome Back"} variant="smallRegular" />
-            <Typography content={username || "Username"} variant="xLargeBold" />
+            <Typography content={"Search results"} variant="smallRegular" />
+            <Typography
+              content={searchedText || "No title to search about"}
+              variant="xLargeBold"
+            />
           </View>
-          <Image
-            source={images.logoSmall}
-            style={{ width: 35, height: 35 }}
-            resizeMode="contain"
-          />
         </View>
         <SearchInput />
       </View>
-      <LatestVideos />
     </View>
   );
 };
 
-export default HomeHeader;
+export default SearchHeader;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: spacing.large,
     alignItems: "flex-start",
   },
 

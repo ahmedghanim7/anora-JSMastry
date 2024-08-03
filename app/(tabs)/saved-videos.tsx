@@ -1,7 +1,7 @@
 import Typography from "@/components/common/Typography";
 import Screen from "@/components/common/Screen";
 
-const Bookmark = () => {
+const SavedPostsScreen = () => {
   return (
     <Screen>
       <Typography content={"Bookmark"} variant="largeSemiBold" />
@@ -9,4 +9,4 @@ const Bookmark = () => {
   );
 };
 
-export default Bookmark;
+export default SavedPostsScreen;

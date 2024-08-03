@@ -37,7 +37,7 @@ const Avatar = ({
 
   return (
     <Image
-      source={source.url ? { uri: source.url } : source}
+      source={typeof source === "string" ? { uri: source } : source}
       style={imageStyles}
       resizeMode={resizeMode || "cover"}
     />

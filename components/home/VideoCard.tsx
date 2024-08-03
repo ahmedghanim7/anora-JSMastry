@@ -1,7 +1,6 @@
-import { useState } from "react";
 import { View, StyleSheet, StyleProp, ViewStyle } from "react-native";
 import { spacing } from "@/theme";
-import { VideoPlayer } from "../common";
+import { VideoThumbnail } from "../common";
 import VideoCardHeader from "./VideoCardHeader";
 import { Post } from "@/@types";
 
@@ -12,8 +11,7 @@ const VideoCard = ({
   post: Post;
   containerStyles?: StyleProp<ViewStyle>;
 }) => {
-  const { creator, thumbnailUrl, title, videoUrl } = post;
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const { creator, title } = post;
 
   return (
     <View style={[styles.container, containerStyles]}>
@@ -22,12 +20,7 @@ const VideoCard = ({
         creator={creator.username}
         title={title}
       />
-      <VideoPlayer
-        isVideoPlaying={isVideoPlaying}
-        setIsVideoPlaying={setIsVideoPlaying}
-        thumbnailUrl={thumbnailUrl}
-        videoUrl={videoUrl}
-      />
+      <VideoThumbnail post={post} thumbnailStyles={styles.thumbnailStyles} />
     </View>
   );
 };
@@ -40,5 +33,10 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     rowGap: spacing.normal,
     marginBottom: spacing.xxLarge,
+  },
+  thumbnailStyles: {
+    borderRadius: 14,
+    width: "100%",
+    height: 200,
   },
 });

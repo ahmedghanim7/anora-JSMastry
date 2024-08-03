@@ -6,13 +6,10 @@ import { getCurrentUser } from "@/service/app-write/auth";
 import { useAppDispatch } from "@/store";
 import { setUser } from "@/store/features/user";
 
-const Welcome = () => {
-  // if (!loading && isLogged) return <Redirect href="/home" />;
-  //  check if there is user id by account id
-  // fetch user data
-  // navigate into home
+const Splash = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useAppDispatch();
+
   const checkIsUserAuthorized = async () => {
     setIsLoading(true);
     try {
@@ -32,6 +29,7 @@ const Welcome = () => {
       } else router.replace("/welcome");
     } catch (err) {
       console.log({ err });
+      router.replace("/welcome");
     } finally {
       setIsLoading(false);
     }
@@ -48,4 +46,4 @@ const Welcome = () => {
   );
 };
 
-export default Welcome;
+export default Splash;

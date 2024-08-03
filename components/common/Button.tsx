@@ -55,6 +55,7 @@ const Button = ({
 
   return (
     <TouchableOpacity
+    
       onPress={onPress}
       activeOpacity={0.7}
       style={containerCustomStyle}

@@ -1,11 +1,10 @@
 import { router } from "expo-router";
 import { View, Image, StyleSheet } from "react-native";
-import { images } from "../constants";
 import { colors, spacing } from "@/theme";
 import { Button, Typography, Screen } from "@/components/common";
-const Welcome = () => {
-  // if (!loading && isLogged) return <Redirect href="/home" />;
+import { images } from "@/assets";
 
+const WelcomeScreen = () => {
   return (
     <Screen withStatusBar px="none" scrollable={false}>
       <View style={styles.viewContainer}>
@@ -56,20 +55,16 @@ const Welcome = () => {
   );
 };
 
-export default Welcome;
+export default WelcomeScreen;
 
 const styles = StyleSheet.create({
   viewContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    // // paddingHorizontal: spacing.large,
     rowGap: 10,
   },
-  image: {
-    width: "100%",
-    height: 298,
-  },
+  image: { width: "100%", height: 298 },
   aroaPath: {
     position: "absolute",
     bottom: 0,

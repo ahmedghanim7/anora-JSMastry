@@ -2,7 +2,7 @@ import { View } from "react-native";
 import React from "react";
 import { Formik } from "formik";
 import { spacing } from "@/theme";
-import Button from "./Button";
+import Button from "../Button";
 import { IFormField } from "@/@types";
 import FormField from "./FormField";
 
@@ -39,7 +39,7 @@ const FormikForm = ({
       }) => {
         return (
           <View style={{ gap: spacing.small }}>
-            {fields.map(({ label, name, value, type = "TEXT" }) => (
+            {fields.map(({ label, name, type = "TEXT" }) => (
               <FormField
                 key={name}
                 label={label}

@@ -12,9 +12,9 @@ import {
 
 import { colors, spacing } from "@/theme";
 import { InputTypes } from "@/@types";
-import { icons } from "@/constants";
 import FormikErrorMessage from "./FormikErrorMessage";
-import Typography from "./Typography";
+import Typography from "../Typography";
+import { icons } from "@/assets";
 
 interface FormFieldProps {
   name?: string;

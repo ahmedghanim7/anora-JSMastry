@@ -1,24 +1,30 @@
 import { useState } from "react";
 import { Link, router } from "expo-router";
 import { View, Dimensions, Image, StyleSheet } from "react-native";
-import { images } from "../../constants";
 import { colors, spacing } from "@/theme";
 import { SignInSchema } from "@/utils/validation";
-import { getCurrentUser, signIn, signOut } from "@/service/app-write/auth";
-import { useAppDispatch, useAppSelector } from "@/store";
+import { getCurrentUser, signIn } from "@/service/app-write/auth";
+import { useAppDispatch } from "@/store";
 import { setUser } from "@/store/features/user";
 import { IFormField, SignInParams } from "@/@types";
 import { Typography, FormikForm, Screen } from "@/components/common";
-import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const SignIn = () => {
+import { images } from "@/assets";
+import { showToastError } from "@/utils";
+import { trimString } from "@/utils/functions";
+
+const SignInScreen = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useAppDispatch();
 
   const signInHandler = async ({ email, password }: SignInParams) => {
     setIsSubmitting(true);
+
     try {
-      await signIn({ email, password });
+      await signIn({
+        email: trimString(email),
+        password: trimString(password),
+      });
       const user = await getCurrentUser();
       if (user?.accountId)
         await AsyncStorage.setItem("accountId", user?.accountId);
@@ -34,10 +40,7 @@ const SignIn = () => {
       router.replace("/home");
     } catch (error: any) {
       console.log({ error });
-      Toast.show({
-        type: "error",
-        text1: error?.message,
-      });
+      showToastError(error?.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -54,13 +57,9 @@ const SignIn = () => {
           />
           <Typography content={`Sign In`} variant="xLargeBold" />
         </View>
-
         <FormikForm
           fields={formFields}
-          initialValues={{
-            email: "test@test.com",
-            password: "Ahmed123@",
-          }}
+          initialValues={{ email: "", password: "" }}
           onSubmit={signInHandler}
           submitButtonLabel="Log In"
           validationSchema={SignInSchema}
@@ -80,7 +79,7 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignInScreen;
 
 const styles = StyleSheet.create({
   container: {

@@ -2,23 +2,42 @@ import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { colors, spacing } from "@/theme";
 import { ResizeMode, Video } from "expo-av";
-import { icons } from "@/constants";
-import { Typography } from "../common";
+import { Button, Typography } from "../common";
 import { FileMedia } from "@/@types/Posts.type";
+import { icons } from "@/assets";
 
 interface UploadVideoProps {
   openPicker: (mediaType: string) => void;
   video: FileMedia;
+  clearMedia: (type: string) => void;
+  uploading: boolean;
 }
 
-const UploadVideo = ({ openPicker, video }: UploadVideoProps) => {
+const UploadVideo = ({
+  openPicker,
+  uploading,
+  video,
+  clearMedia,
+}: UploadVideoProps) => {
   return (
     <View style={styles.container}>
-      <Typography
-        content="Upload Video"
-        variant="mediumRegular"
-        color={colors.gray.DEFAULT}
-      />
+      <View style={styles.titleContainer}>
+        <Typography
+          content="Upload Video"
+          variant="mediumRegular"
+          color={colors.gray.DEFAULT}
+        />
+        {video.uri && (
+          <Button
+            isLoading={uploading}
+            variant="smallRegular"
+            title="Clear"
+            containerStyles={styles.clearButton}
+            textStyles={{ color: "white" }}
+            onPress={() => clearMedia("video")}
+          />
+        )}
+      </View>
       <TouchableOpacity
         style={{ width: "100%" }}
         onPress={() => openPicker("video")}
@@ -57,7 +76,7 @@ const styles = StyleSheet.create({
     rowGap: spacing.small,
     alignItems: "flex-start",
   },
-  videoStyles: { width: "100%", height: 150, borderRadius: spacing.xxLarge },
+  videoStyles: { width: "100%", height: 150, borderRadius: spacing.small },
   uploadVideoContainer: {
     width: "100%",
     height: 150,
@@ -77,5 +96,19 @@ const styles = StyleSheet.create({
     borderColor: colors.secondary.DEFAULT,
     alignItems: "center",
     justifyContent: "center",
+  },
+  clearButton: {
+    minHeight: 20,
+    paddingHorizontal: 4,
+    paddingVertical: 4,
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: colors.red.redDark,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
   },
 });

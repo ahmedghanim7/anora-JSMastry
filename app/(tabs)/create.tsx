@@ -3,19 +3,14 @@ import * as DocumentPicker from "expo-document-picker";
 import { spacing } from "@/theme";
 import UploadVideo from "@/components/create/UploadVideo";
 import AddThumbnailImage from "@/components/create/AddThumbnailImage";
-import {
-  Button,
-  Typography,
-  FormField,
-  Screen,
-} from "@/components/common";
-import { Alert, View } from "react-native";
+import { Button, Typography, FormField, Screen } from "@/components/common";
+import { View } from "react-native";
 import { FileMedia } from "@/@types/Posts.type";
 import { useAppSelector } from "@/store";
 import { router } from "expo-router";
 import { createVideoPost } from "@/service/app-write/posts";
 import { extractDataFile, validateFormNotEmpty } from "@/utils/functions";
-import Toast from "react-native-toast-message";
+import { showToastError, showToastInfo, showToastSuccess } from "@/utils";
 
 interface Form {
   title?: string;
@@ -24,7 +19,7 @@ interface Form {
   prompt?: string;
 }
 
-const Create = () => {
+const CreatePostScreen = () => {
   const [uploading, setUploading] = useState(false);
   const initialFormState: Form = {
     title: "",
@@ -34,35 +29,33 @@ const Create = () => {
   };
   const [form, setForm] = useState<Form>(initialFormState);
 
-  const { username, $id } = useAppSelector((state) => state.user);
+  const { $id } = useAppSelector((state) => state.user);
 
   const openPicker = async (mediaType: string) => {
+    const targetedMediaKey = mediaType === "image" ? "thumbnail" : "video";
+    if (form[targetedMediaKey]?.uri) return;
     const pickedMedia = await DocumentPicker.getDocumentAsync({
-      // type:
-      //   mediaType === "image"
-      //     ? ["image/png", "image/jpg"]
-      //     : ["video/mp4", "video/gif"],
+      type:
+        mediaType === "image"
+          ? ["image/png", "image/jpg", "image/jpeg", "image/jfif", "image/pjp"]
+          : ["video/mp4", "video/gif"],
     });
     if (!pickedMedia.canceled) {
       const extractedMedia = extractDataFile(pickedMedia.assets[0]);
-      const updatedMediaKey = mediaType === "image" ? "thumbnail" : "video";
       setForm({
         ...form,
-        [updatedMediaKey]: extractedMedia,
+        [targetedMediaKey]: extractedMedia,
       });
     } else {
       setTimeout(() => {
-        Toast.show({
-          type: "info",
-          text1: "Document picked",
-        });
+        showToastInfo("Document NOT picked");
       }, 100);
     }
   };
 
   const submit = async () => {
     if (!validateFormNotEmpty(form)) {
-      return;
+      return showToastError("Please provide all fields");
     }
     setUploading(true);
     try {
@@ -70,20 +63,21 @@ const Create = () => {
         ...form,
         userId: $id,
       });
-      Toast.show({
-        type: "success",
-        text1: "Success, Post uploaded successfully",
-      });
+      showToastSuccess("Success, Post uploaded successfully");
       router.push("/home");
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
+      showToastError(error?.message);
     } finally {
       setForm(initialFormState);
       setUploading(false);
     }
+  };
+
+  const clearMedia = (type: string) => {
+    setForm({
+      ...form,
+      [type]: {},
+    });
   };
 
   return (
@@ -101,8 +95,15 @@ const Create = () => {
           onChangeText={(e) => setForm({ ...form, title: e })}
           containerStyles={{ marginTop: spacing.medium - 2 }}
         />
-        <UploadVideo openPicker={openPicker} video={form.video || {}} />
+        <UploadVideo
+          uploading={uploading}
+          clearMedia={clearMedia}
+          openPicker={openPicker}
+          video={form.video || {}}
+        />
         <AddThumbnailImage
+          uploading={uploading}
+          clearMedia={clearMedia}
           openPicker={openPicker}
           thumbnail={form.thumbnail || {}}
         />
@@ -126,4 +127,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default CreatePostScreen;

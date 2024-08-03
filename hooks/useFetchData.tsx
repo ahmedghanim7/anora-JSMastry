@@ -1,3 +1,4 @@
+import { showToastError } from "@/utils";
 import { useEffect, useState } from "react";
 
 interface UseFetchDataProps {
@@ -6,22 +7,35 @@ interface UseFetchDataProps {
 export const useFetchData = ({ func }: UseFetchDataProps) => {
   const [isFetching, setIsFetching] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [error, setError] = useState(null);
 
   const fetchData = async () => {
-    setIsFetching(true);
-    await func();
-    setIsFetching(false);
+    try {
+      setIsFetching(true);
+      await func();
+    } catch (err: any) {
+      setError(err);
+      showToastError(err.message);
+    } finally {
+      setIsFetching(false);
+    }
   };
 
   const refresh = async () => {
-    setIsRefreshing(true);
-    fetchData();
-    setIsRefreshing(false);
+    try {
+      setIsRefreshing(true);
+      await func();
+    } catch (err: any) {
+      setError(err);
+      showToastError(err.message);
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  return { refresh, isFetching, isRefreshing };
+  return { refresh, isFetching, isRefreshing, error };
 };

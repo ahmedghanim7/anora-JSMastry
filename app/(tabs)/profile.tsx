@@ -7,7 +7,7 @@ import { getUserPosts } from "@/service/app-write/posts";
 import { setUserPosts } from "@/store/features/posts";
 import { useFetchData } from "@/hooks";
 
-const Profile = () => {
+const UserProfileScreen = () => {
   const {
     posts: { userPosts },
     user: { $id },
@@ -35,6 +35,7 @@ const Profile = () => {
             title="No Videos Found"
             subtitle="No videos found for this profile"
             isLoading={isFetching}
+            marginHorizontal={"none"}
           />
         )}
         ListHeaderComponent={<ProfileHeader />}
@@ -46,4 +47,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserProfileScreen;

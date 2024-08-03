@@ -1,38 +1,39 @@
 import {
-  Dimensions,
   Image,
   StyleProp,
   StyleSheet,
-  Text,
   TouchableOpacity,
-  View,
   ViewStyle,
 } from "react-native";
 import React from "react";
 import { spacing } from "@/theme";
-import { icons } from "@/constants";
+import { icons } from "@/assets";
+import { Post } from "@/@types";
+import { useAppDispatch } from "@/store";
+import { setMedia } from "@/store/features/media-viewer";
+import { router } from "expo-router";
 
 interface VideoThumbnailProps {
-  onPlayHandler: () => void;
-  thumbnailUrl: string;
+  onPlayHandler?: () => void;
+  thumbnailUrl?: string;
   thumbnailStyles?: StyleProp<ViewStyle>;
+  post: Post;
 }
 
-const VideoThumbnail = ({
-  onPlayHandler,
-  thumbnailUrl,
-  thumbnailStyles,
-}: VideoThumbnailProps) => {
+const VideoThumbnail = ({ thumbnailStyles, post }: VideoThumbnailProps) => {
+  const dispatch = useAppDispatch();
+  const onPressHandler = () => {
+    dispatch(setMedia({ mediaType: "video", post: post || {} }));
+    router.push("/media-viewer");
+  };
   return (
     <TouchableOpacity
       activeOpacity={0.7}
-      onPress={onPlayHandler}
+      onPress={onPressHandler}
       style={[styles.container, thumbnailStyles]}
     >
       <Image
-        // source={{ uri: thumbnailUrl }}
-        // @ts-ignore
-        source={thumbnailUrl}
+        source={{ uri: post?.thumbnailUrl }}
         style={styles.thumbnailImage}
         resizeMode="cover"
       />

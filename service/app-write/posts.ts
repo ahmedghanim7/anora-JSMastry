@@ -2,6 +2,7 @@ import { ID, Query } from "react-native-appwrite";
 import { appWriteConfig, appWriteDatabases } from "./appwrite.config";
 import { uploadFile } from "./files";
 import { Post } from "@/@types";
+import { trimString } from "@/utils/functions";
 
 export async function createVideoPost(form: any) {
   try {
@@ -15,10 +16,10 @@ export async function createVideoPost(form: any) {
       appWriteConfig.videoCollectionId,
       ID.unique(),
       {
-        title: form.title,
+        title: trimString(form.title),
         thumbnailUrl: thumbnailUrl,
         videoUrl: videoUrl,
-        propmpt: form.prompt,
+        propmpt: trimString(form.prompt),
         creator: form.userId,
       }
     );
@@ -99,19 +100,3 @@ export const getLatestPosts = async (): Promise<Post[]> => {
     throw new Error(error);
   }
 };
-
-export async function searchPosts(query: string) {
-  try {
-    const posts = await appWriteDatabases.listDocuments(
-      appWriteConfig.databaseId,
-      appWriteConfig.videoCollectionId,
-      [Query.search("title", query)]
-    );
-
-    if (!posts) throw new Error("Something went wrong");
-
-    return posts.documents;
-  } catch (error: any) {
-    throw new Error(error);
-  }
-}

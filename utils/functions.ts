@@ -9,7 +9,9 @@ export const validateFormNotEmpty = (form: Object) => {
   const formKeys = Object.keys(form);
   return formKeys.every((key) => {
     if (key === "video" || key === "thumbnail") return Boolean(form[key].uri);
-    
+
     return Boolean(form[key]);
   });
 };
+
+export const trimString = (str: string) => str.trim();

@@ -7,8 +7,9 @@ import { getAllPosts, getLatestPosts } from "@/service/app-write/posts";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { setAllPosts, setLatestPosts } from "@/store/features/posts";
 import { useFetchData } from "@/hooks";
+import { useEffect } from "react";
 
-const Home = () => {
+const HomeScreen = () => {
   const dispatch = useAppDispatch();
   const { allPosts } = useAppSelector((state) => state.posts);
 
@@ -24,6 +25,10 @@ const Home = () => {
   const { isFetching, isRefreshing, refresh } = useFetchData({
     func: fetchPosts,
   });
+
+  useEffect(() => {
+    refresh();
+  }, []);
 
   return (
     <Screen scrollable={false} top="huge" px="none">
@@ -53,4 +58,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomeScreen;

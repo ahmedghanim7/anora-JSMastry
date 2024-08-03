@@ -1,14 +1,9 @@
 import { StatusBar } from "expo-status-bar";
-import { Redirect, Tabs } from "expo-router";
-
-import { icons } from "../../constants";
+import { Tabs } from "expo-router";
 import BottomTabIcon from "@/components/navigation/BottomTabIcon";
+import { icons } from "@/assets";
 
 const TabLayout = () => {
-  // const { loading, isLogged } = useGlobalContext();
-
-  // if (!loading && !isLogged) return <Redirect href="/sign-in" />;
-
   return (
     <>
       <Tabs
@@ -35,7 +30,7 @@ const TabLayout = () => {
                 <BottomTabIcon
                   icon={item.icon}
                   color={color}
-                  name={item.name}
+                  name={item.title}
                   focused={focused}
                 />
               ),
@@ -43,8 +38,6 @@ const TabLayout = () => {
           />
         ))}
       </Tabs>
-
-      {/* <Loader isLoading={loading} /> */}
       <StatusBar backgroundColor="#161622" style="light" />
     </>
   );
@@ -64,8 +57,8 @@ const tabs = [
     icon: icons.plus,
   },
   {
-    title: "Bookmark",
-    name: "bookmark",
+    title: "Saved",
+    name: "saved-videos",
     icon: icons.bookmark,
   },
   {

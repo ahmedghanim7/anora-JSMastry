@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
+import { View } from "react-native";
 import React from "react";
-import Typography from "./Typography";
-import { colors } from "@/theme";
+import Typography from "../Typography";
+import { colors, spacing } from "@/theme";
 
 interface FormikErrorMessageProps {
   errors: any;
@@ -19,7 +19,7 @@ const FormikErrorMessage = ({
   if (!isThereError) return;
 
   return (
-    <View>
+    <View style={{ marginTop: spacing.tiny }}>
       <Typography
         textStyles={{ textAlign: "left" }}
         content={isThereError ? errors[inputName] : ""}
@@ -31,5 +31,3 @@ const FormikErrorMessage = ({
 };
 
 export default FormikErrorMessage;
-
-const styles = StyleSheet.create({});

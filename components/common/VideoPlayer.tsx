@@ -1,10 +1,20 @@
-import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 import React from "react";
 import { AVPlaybackStatus, ResizeMode, Video } from "expo-av";
 import { spacing } from "@/theme";
 import VideoThumbnail from "./VideoThumbnail";
+import { useAppDispatch } from "@/store";
+import { Post } from "@/@types";
+import { setMedia } from "@/store/features/media-viewer";
 
 interface VideoPlayerProps {
+  post?: Post;
   isVideoPlaying: boolean;
   setIsVideoPlaying: (val: boolean) => void;
   videoUrl: string;
@@ -22,30 +32,18 @@ const VideoPlayer = ({
   thumbnailStyles,
   containerStyles,
   videoStyles,
+  post,
 }: VideoPlayerProps) => {
   const onPlayHandler = () => setIsVideoPlaying(true);
+
   return (
     <View style={[{ width: "100%", height: 200 }, containerStyles]}>
-      {isVideoPlaying ? (
-        <Video
-          // @ts-ignore
-          source={videoUrl}
-          style={[styles.video, videoStyles]}
-          resizeMode={ResizeMode.COVER}
-          useNativeControls
-          shouldPlay
-          onPlaybackStatusUpdate={(status: AVPlaybackStatus) => {
-            // @ts-ignore
-            if (status.didJustFinish) setIsVideoPlaying(false); // error here
-          }}
-        />
-      ) : (
-        <VideoThumbnail
-          thumbnailStyles={thumbnailStyles}
-          thumbnailUrl={thumbnailUrl}
-          onPlayHandler={onPlayHandler}
-        />
-      )}
+      <VideoThumbnail
+        post={post}
+        thumbnailStyles={thumbnailStyles}
+        thumbnailUrl={thumbnailUrl}
+        onPlayHandler={onPlayHandler}
+      />
     </View>
   );
 };

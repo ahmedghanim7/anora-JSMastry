@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "anora",
+    "name": "Anora",
     "slug": "anora",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -10,12 +10,11 @@
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000"
     },
     "ios": {
       "supportsTablet": true,
       "package":"com.ahmedghanim.anora"
-
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +22,6 @@
         "backgroundColor": "#ffffff"
       },
       "package":"com.ahmedghanim.anora"
-
     },
     "web": {
       "bundler": "metro",

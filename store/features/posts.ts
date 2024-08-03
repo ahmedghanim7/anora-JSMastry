@@ -6,15 +6,20 @@ interface InitialState {
   allPosts: Post[];
   latestPosts: Post[];
   userPosts: Post[];
+  searchedPosts: { posts: Post[]; searchedText: string };
 }
 
 const initialState: InitialState = {
   allPosts: [],
   latestPosts: [],
   userPosts: [],
+  searchedPosts: {
+    posts: [],
+    searchedText: "",
+  },
 };
 
-export const userSlice = createSlice({
+export const postsSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
@@ -27,14 +32,38 @@ export const userSlice = createSlice({
     setUserPosts: (state, action: PayloadAction<Post[]>) => {
       state.userPosts = action.payload;
     },
+    searchPosts: (state) => {
+      const textToSearch = state.searchedPosts.searchedText;
+      if (textToSearch) {
+        const data = state.allPosts.filter((post) =>
+          post.title.toLowerCase().includes(textToSearch.toLowerCase())
+        );
+        state.searchedPosts.posts = data;
+      } else {
+        state.searchedPosts.posts = [];
+      }
+    },
+    setSearchedText: (state, action: PayloadAction<string>) => {
+      state.searchedPosts.searchedText = action.payload;
+    },
+    clearSearchValues: (state) => {
+      state.searchedPosts = { posts: [], searchedText: "" };
+    },
     clearPosts: (state) => {
       state = initialState;
     },
   },
 });
 
-export const { clearPosts, setAllPosts, setLatestPosts, setUserPosts } =
-  userSlice.actions;
+export const {
+  clearPosts,
+  setAllPosts,
+  setLatestPosts,
+  setUserPosts,
+  searchPosts,
+  setSearchedText,
+  clearSearchValues,
+} = postsSlice.actions;
 
-const userReducer = userSlice.reducer;
-export default userReducer;
+const postsReducer = postsSlice.reducer;
+export default postsReducer;
